@@ -1,0 +1,30 @@
+import java.nio.charset.StandardCharsets
+
+plugins {
+    id 'java'
+    id 'com.diffplug.spotless' version '5.14.1'
+}
+
+spotless {
+    encoding StandardCharsets.UTF_8.name()
+    java {
+        target '**/src/*/java/**/*.java'
+        removeUnusedImports()
+        googleJavaFormat('1.10.0')
+    }
+    format 'misc', {
+        target '**/*.gradle', '**/*.md', '**/*.properties', '.gitattributes', '**/.gitignore', '**/Dockerfile', '**/docker-compose.yml'
+        trimTrailingWhitespace()
+        indentWithSpaces()
+        endWithNewline()
+    }
+}
+
+allprojects {
+    group 'se.ifmo.blos'
+}
+
+ext {
+    jjwtVersion = '0.11.2'
+    openapiVersion = '1.5.9'
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<configuration xmlns="urn:activemq" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="urn:activemq /schema/artemis-configuration.xsd">
+    <core xmlns="urn:activemq:core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="urn:activemq:core ">
+        <addresses>
+            <address name="credits">
+                <anycast>
+                    <queue name="credits"/>
+                </anycast>
+            </address>
+        </addresses>
+    </core>
+</configuration>

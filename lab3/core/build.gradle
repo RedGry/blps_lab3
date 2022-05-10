@@ -1,0 +1,33 @@
+plugins {
+    id 'spring-app'
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-jta-atomikos'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-artemis'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-quartz'
+    implementation "org.springdoc:springdoc-openapi-ui:${rootProject.ext.openapiVersion}"
+    implementation "org.springdoc:springdoc-openapi-security:${rootProject.ext.openapiVersion}"
+
+    compileOnly "io.jsonwebtoken:jjwt-api:${rootProject.ext.jjwtVersion}"
+
+    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:${rootProject.ext.jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:${rootProject.ext.jjwtVersion}"
+
+    annotationProcessor 'org.hibernate:hibernate-jpamodelgen'
+}
+
+task copyJar {
+    copy {
+        from 'build/libs/core.jar'
+        into '../docker'
+    }
+}

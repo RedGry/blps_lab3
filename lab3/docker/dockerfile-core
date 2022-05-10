@@ -1,0 +1,14 @@
+FROM adoptopenjdk/openjdk16-openj9:alpine-jre
+
+ARG APPLICATION_ARTIFACT_NAME
+
+COPY ./assets/wait-for /wait-for
+RUN chmod +x ./wait-for
+
+COPY ./${APPLICATION_ARTIFACT_NAME}.jar /${APPLICATION_ARTIFACT_NAME}.jar
+
+ENV APP_ARTIFACT=${APPLICATION_ARTIFACT_NAME}
+
+EXPOSE 8090
+
+ENTRYPOINT exec ./wait-for postgres:5432 -- ./wait-for artemis:8161 -- java -jar /${APP_ARTIFACT}.jar

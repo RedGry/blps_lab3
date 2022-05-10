@@ -1,0 +1,78 @@
+version: '3.5'
+
+services:
+
+  artemis:
+    image: alexcheng/activemq-artemis
+    restart: always
+    env_file:
+      - artemis.env
+    volumes:
+      - ./assets/artemis-override:/var/lib/artemis/etc-override
+    ports:
+      - "8161:8161"
+      - "61616:61616"
+      - "61613:61613"
+
+  mailhog:
+    image: mailhog/mailhog
+    restart: always
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
+  postgres:
+    image: postgres:13.3-alpine
+    restart: always
+    env_file:
+      - postgres.env
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    ports:
+      - "10432:5432"
+
+  core:
+    build:
+      context: .
+      dockerfile: dockerfile-core
+      args:
+        APPLICATION_ARTIFACT_NAME: core
+        DATABASE_HOST: ${POSTGRES_HOST}
+        DATABASE_PORT: ${POSTGRES_PORT}
+    depends_on:
+      - postgres
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.core.rule=PathPrefix(`/api/v1`)"
+      - "traefik.http.routers.core.entrypoints=web"
+      - "traefik.http.routers.core.service=coreService"
+      - "traefik.http.services.coreService.loadBalancer.server.port=8090"
+    env_file:
+      - core.env
+    deploy:
+      mode: replicated
+      replicas: 2
+
+#  external:
+#    build:
+#      context: .
+#      dockerfile: dockerfile-external
+#      args:
+#        APPLICATION_ARTIFACT_NAME: external
+#    restart: always
+
+  traefik:
+    image: traefik:latest
+    restart: always
+    command:
+      - "--accesslog=true"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:8090"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    ports:
+      - "8080:8080"
+      - "8090:8090"
