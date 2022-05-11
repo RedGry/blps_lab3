@@ -10,7 +10,10 @@ import se.ifmo.blps.lab3.exceptions.IllegalPropertyUpdateException;
 public class CreditMapper implements Mapper<Credit, CreditDto> {
   @Override
   public Credit mapToPersistable(CreditDto dto) throws IllegalMappingOperationException {
-    return Credit.builder().price(dto.getPrice()).build();
+    return Credit.builder()
+            .price(dto.getPrice())
+            .vin(dto.getVin())
+            .build();
   }
 
   @Override
@@ -18,6 +21,7 @@ public class CreditMapper implements Mapper<Credit, CreditDto> {
     return CreditDto.builder()
         .id(persistable.getId())
         .price(persistable.getPrice())
+        .vin(persistable.getVin())
         .applicantId(persistable.getApplicant() != null ? persistable.getApplicant().getId() : null)
         .applicantEmail(
             persistable.getApplicant() != null ? persistable.getApplicant().getEmail() : null)

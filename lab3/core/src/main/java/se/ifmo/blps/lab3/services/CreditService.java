@@ -1,21 +1,33 @@
 package se.ifmo.blps.lab3.services;
 
 import static java.lang.String.format;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpStatus.OK;
+import static se.ifmo.blps.lab3.domains.CreditStatus.ACCEPTED;
 import static se.ifmo.blps.lab3.domains.CreditStatus.CREATED;
+import static se.ifmo.blps.lab3.domains.CreditStatus.REJECTED;
 import static se.ifmo.blps.lab3.domains.CreditStatus.REVIEW;
 
+import java.util.Collections;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import se.ifmo.blps.lab3.domains.Credit;
 import se.ifmo.blps.lab3.domains.User;
 import se.ifmo.blps.lab3.dtos.CreditDto;
+import se.ifmo.blps.lab3.dtos.VinDto;
 import se.ifmo.blps.lab3.exceptions.IllegalPropertyUpdateException;
 import se.ifmo.blps.lab3.exceptions.ResourceAlreadyExistsException;
 import se.ifmo.blps.lab3.exceptions.ResourceNotFoundException;
@@ -26,10 +38,13 @@ import se.ifmo.blps.lab3.repositories.CreditRepository;
 @Transactional(
     rollbackFor = {ResourceNotFoundException.class, ResourceAlreadyExistsException.class})
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@Slf4j
 public class CreditService implements CommonService<Credit, UUID, CreditDto> {
 
   private final CreditRepository creditRepository;
   private final CreditMapper creditMapper;
+
+  @Autowired
   private final RestTemplate restTemplate;
 
   @Override
@@ -144,14 +159,16 @@ public class CreditService implements CommonService<Credit, UUID, CreditDto> {
     credit.setManager(manager);
     credit.setStatus(REVIEW);
 
-    //    final HttpEntity<Object> entity = new HttpEntity<>(new HttpHeaders());
-    //    final var response = restTemplate.exchange("/api/v1/requests", POST, entity,
-    // Object.class);
-    //    if (response.getStatusCode() == OK) {
-    //      credit.setStatus(ACCEPTED);
-    //    } else {
-    //      credit.setStatus(REJECTED);
-    //    }
+//    TODO: CHANGE restTemplate TO POST WITH DATA
+
+//    final HttpEntity<Object> entity = new HttpEntity<>(new VinDto(credit.getVin()), new HttpHeaders());
+//    final var response = restTemplate.getForObject("/api/v1/cars/check", entity, Object.class);
+//    if (response.get() == OK) {
+//      credit.setStatus(ACCEPTED);
+//    } else {
+//      credit.setStatus(REJECTED);
+//    }
+
     return creditMapper.mapToDto(credit);
   }
 }

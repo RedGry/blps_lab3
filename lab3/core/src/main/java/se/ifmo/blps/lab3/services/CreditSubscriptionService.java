@@ -73,7 +73,7 @@ public class CreditSubscriptionService {
   @JmsListener(destination = QUEUE_DESTINATION)
   public void sendNotifications(
       final ActiveMQBytesMessage message, final @Payload CreditNotificationDto notificationDto) {
-    log.debug("Received message = {} with payload = {}", message, notificationDto);
+    log.info("Received message = {} with payload = {}", message, notificationDto);
 
     final var mailMessage = new MimeMailMessage(mailSender.createMimeMessage());
     mailMessage.setFrom("Lab3");

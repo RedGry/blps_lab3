@@ -33,7 +33,7 @@ public class SendCreditNotificationRequestJob extends QuartzJobBean {
   @Override
   @SneakyThrows
   protected void executeInternal(final JobExecutionContext context) throws JobExecutionException {
-    log.debug("Started execution of SendCreditNotificationRequestJob with context = {}", context);
+    log.info("Started execution of SendCreditNotificationRequestJob with context = {}", context);
 
     final var result =
         transactionTemplate.execute(
@@ -79,6 +79,6 @@ public class SendCreditNotificationRequestJob extends QuartzJobBean {
       throw new JobExecutionException(result);
     }
 
-    log.debug("Finished execution of SendCreditNotificationRequestJob");
+    log.info("Finished execution of SendCreditNotificationRequestJob");
   }
 }

@@ -5,10 +5,10 @@ import static lombok.AccessLevel.PRIVATE;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.lang.Nullable;
-import se.ifmo.blos.lab3.domains.Brand_;
+import se.ifmo.blps.lab3.domains.Brand_;
 import se.ifmo.blps.lab3.domains.Car;
-import se.ifmo.blos.lab3.domains.Car_;
-import se.ifmo.blos.lab3.domains.User_;
+import se.ifmo.blps.lab3.domains.Car_;
+import se.ifmo.blps.lab3.domains.User_;
 import se.ifmo.blps.lab3.requests.CarRequestParameters;
 
 @NoArgsConstructor(access = PRIVATE)

@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
+import org.springframework.web.client.RestTemplate;
 import se.ifmo.blps.lab3.dtos.AuthorizationDto;
 
 @Configuration
@@ -32,4 +33,10 @@ public class JmsConfig {
         Map.of(AuthorizationDto.class.getCanonicalName(), AuthorizationDto.class));
     return converter;
   }
+
+  @Bean
+  public RestTemplate restTemplate() {
+    return new RestTemplate();
+  }
 }
+

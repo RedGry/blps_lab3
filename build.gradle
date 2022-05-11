@@ -21,7 +21,7 @@ spotless {
 }
 
 allprojects {
-    group 'se.ifmo.blos'
+    group 'se.ifmo.blps'
 }
 
 ext {

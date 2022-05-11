@@ -5,6 +5,8 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Size;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +21,9 @@ public class CreditDto implements Dto {
 
   @JsonProperty(access = READ_ONLY)
   private UUID id;
+
+  @Size(min = 17, max = 17)
+  private String vin;
 
   @DecimalMin("1")
   private Double price;

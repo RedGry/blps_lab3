@@ -61,9 +61,9 @@ public class ArtemisWebSocketStompClient {
     headers.add("destination-type", "ANYCAST");
     final var receiptable = session.send(headers, creditNotificationDto);
 
-    log.debug("STOMP message sent");
+    log.info("STOMP message sent");
     receiptable.addReceiptLostTask(() -> log.warn("STOMP receipt lost with"));
-    receiptable.addReceiptTask(() -> log.debug("STOMP receipt received"));
+    receiptable.addReceiptTask(() -> log.info("STOMP receipt received"));
   }
 
   private static class SessionHandler extends StompSessionHandlerAdapter {
@@ -78,7 +78,7 @@ public class ArtemisWebSocketStompClient {
 
     @Override
     public void handleFrame(final StompHeaders headers, final @Nullable Object payload) {
-      log.debug("STOMP frame with StompHeaders = {} and payload = {}", headers, payload);
+      log.info("STOMP frame with StompHeaders = {} and payload = {}", headers, payload);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class ArtemisWebSocketStompClient {
 
     @Override
     public void afterConnected(final StompSession session, final StompHeaders connectedHeaders) {
-      log.debug(
+      log.info(
           "STOMP StompSession = {} connected with StompHeaders = {}", session, connectedHeaders);
     }
   }

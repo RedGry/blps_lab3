@@ -36,7 +36,7 @@ public class JwtTokenAuthFilter extends OncePerRequestFilter {
     final String authHeader = request.getHeader(AUTHORIZATION_HEADER);
 
     if (authHeader == null || authHeader.isEmpty() || !authHeader.startsWith(BEARER_TOKEN_PREFIX)) {
-      log.debug("Caught unauthorized request for URL = {}", request.getRequestURL().toString());
+      log.info("Caught unauthorized request for URL = {}", request.getRequestURL().toString());
       filterChain.doFilter(request, response);
       return;
     }
