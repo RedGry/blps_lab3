@@ -9,24 +9,30 @@ import static se.ifmo.blps.lab3.domains.CreditStatus.CREATED;
 import static se.ifmo.blps.lab3.domains.CreditStatus.REJECTED;
 import static se.ifmo.blps.lab3.domains.CreditStatus.REVIEW;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import se.ifmo.blps.lab3.domains.Credit;
 import se.ifmo.blps.lab3.domains.User;
 import se.ifmo.blps.lab3.dtos.CreditDto;
+import se.ifmo.blps.lab3.dtos.Status;
 import se.ifmo.blps.lab3.dtos.VinDto;
 import se.ifmo.blps.lab3.exceptions.IllegalPropertyUpdateException;
 import se.ifmo.blps.lab3.exceptions.ResourceAlreadyExistsException;
@@ -46,6 +52,9 @@ public class CreditService implements CommonService<Credit, UUID, CreditDto> {
 
   @Autowired
   private final RestTemplate restTemplate;
+
+  @Value("${external.server.url}")
+  String externalServerURL;
 
   @Override
   @Transactional
@@ -159,15 +168,14 @@ public class CreditService implements CommonService<Credit, UUID, CreditDto> {
     credit.setManager(manager);
     credit.setStatus(REVIEW);
 
-//    TODO: CHANGE restTemplate TO POST WITH DATA
+    final HttpEntity<Object> entity = new HttpEntity<>( new VinDto(credit.getVin()), new HttpHeaders());
 
-//    final HttpEntity<Object> entity = new HttpEntity<>(new VinDto(credit.getVin()), new HttpHeaders());
-//    final var response = restTemplate.getForObject("/api/v1/cars/check", entity, Object.class);
-//    if (response.get() == OK) {
-//      credit.setStatus(ACCEPTED);
-//    } else {
-//      credit.setStatus(REJECTED);
-//    }
+    final var response = restTemplate.exchange(externalServerURL + "/api/v1/cars/check", POST, entity, Boolean.class);
+    if (response.getBody() != null && response.getBody()) {
+      credit.setStatus(ACCEPTED);
+    } else {
+      credit.setStatus(REJECTED);
+    }
 
     return creditMapper.mapToDto(credit);
   }

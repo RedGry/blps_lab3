@@ -40,14 +40,14 @@ public class CarService implements CommonService<Car, UUID, CarDto> {
   private final CarRepository carRepository;
   private final CarMapper carMapper;
 
-  @Autowired
-  private final RestTemplate restTemplate;
-
-  @Value("${vin.decoder.auth.key}")
-  private String authorizationKey;
-
-  @Value("${vin.decoder.partner.token}")
-  private String partnerToken;
+//  @Autowired
+//  private final RestTemplate restTemplate;
+//
+//  @Value("${vin.decoder.auth.key}")
+//  private String authorizationKey;
+//
+//  @Value("${vin.decoder.partner.token}")
+//  private String partnerToken;
 
   @Override
   @Transactional
@@ -146,23 +146,27 @@ public class CarService implements CommonService<Car, UUID, CarDto> {
   }
 
   @Transactional
-  public Status checkVin(
+  public Boolean checkVin(
       final String vin) {
-    RestTemplate restTemplate = new RestTemplate();
-    HttpHeaders headers = new HttpHeaders();
-    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("authorization", authorizationKey);
-    headers.set("partner-token", partnerToken);
 
-    final HttpEntity<Object> entity = new HttpEntity<>(headers);
-    final var response =
-            restTemplate.exchange("http://api.carmd.com/v3.0/decode?vin=" + vin, GET, entity, Object.class);
-    if (response.getStatusCode() == OK && response.getBody() != null) {
-      log.info("Car with vin " + vin + " is existed: " + response.getBody().toString());
-      return new Status("OK");
-    } else {
-      log.info("Car with vin " + vin + " is not existed");
-      return new Status("FAILED");
-    }
+    return carRepository.existsByVin(vin);
+
+//    P.S. API was unavailable in Russia, cringe...
+//    RestTemplate restTemplate = new RestTemplate();
+//    HttpHeaders headers = new HttpHeaders();
+//    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+//    headers.set("authorization", authorizationKey);
+//    headers.set("partner-token", partnerToken);
+//
+//    final HttpEntity<Object> entity = new HttpEntity<>(headers);
+//    final var response =
+//            restTemplate.exchange("http://api.carmd.com/v3.0/decode?vin=" + vin, GET, entity, Object.class);
+//    if (response.getStatusCode() == OK && response.getBody() != null && !response.getBody().toString().contains("data=null")) {
+//      log.info("Car with vin " + vin + " is existed: " + response.getBody().toString());
+//      return new Status("OK");
+//    } else {
+//      log.info("Car with vin " + vin + " is not existed");
+//      return new Status("FAILED");
+//    }
   }
 }

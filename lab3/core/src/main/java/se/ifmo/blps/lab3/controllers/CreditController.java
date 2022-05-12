@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -77,7 +78,8 @@ public class CreditController {
 
   @PostMapping(path = "/credits/{id}/accept", produces = APPLICATION_JSON_VALUE)
   @PreAuthorize("isAuthenticated() and hasRole('ROLE_MANAGER')")
-  public CreditDto updateCar(final @PathVariable UUID id) throws ResourceNotFoundException {
+  public CreditDto acceptCredit(final @PathVariable UUID id)
+          throws ResourceNotFoundException {
     final var manager =
         (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     return creditService.acceptRequest(manager, id);
